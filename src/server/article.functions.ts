@@ -60,11 +60,17 @@ export const fetchArticle = createServerFn({ method: "POST" })
       const html = await res.text();
       const { title, text } = extractText(html);
       if (text.length < 80) {
-        return { success: false as const, error: "Couldn't extract enough article text from this page." };
+        return {
+          success: false as const,
+          error: "Couldn't extract enough article text from this page.",
+        };
       }
       const combined = title ? `${title}\n\n${text}` : text;
       return { success: true as const, text: combined.slice(0, 20000), title };
     } catch (e) {
-      return { success: false as const, error: e instanceof Error ? e.message : "Failed to fetch URL" };
+      return {
+        success: false as const,
+        error: e instanceof Error ? e.message : "Failed to fetch URL",
+      };
     }
   });

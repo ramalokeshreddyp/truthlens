@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { analyzeText, highlightText, CATEGORY_LABELS, type CategoryKey, type AnalysisResult, type RiskLevel } from "@/lib/analyzer";
+import {
+  analyzeText,
+  highlightText,
+  CATEGORY_LABELS,
+  type CategoryKey,
+  type AnalysisResult,
+  type RiskLevel,
+} from "@/lib/analyzer";
 import { fetchArticle } from "@/server/article.functions";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +16,11 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "TruthLens — Fake News Keyword Checker" },
-      { name: "description", content: "Paste any news text and get an instant trust score based on misinformation signals like sensationalism, clickbait, and conspiracy language." },
+      {
+        name: "description",
+        content:
+          "Paste any news text and get an instant trust score based on misinformation signals like sensationalism, clickbait, and conspiracy language.",
+      },
     ],
   }),
 });
@@ -62,7 +73,7 @@ function Index() {
 
   const highlighted = useMemo(
     () => (result ? highlightText(text, result.matches) : []),
-    [result, text]
+    [result, text],
   );
 
   return (
@@ -74,22 +85,32 @@ function Index() {
         </div>
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[0.95] mb-4">
           Spot the{" "}
-          <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-hero)" }}>
+          <span
+            className="bg-clip-text text-transparent"
+            style={{ backgroundImage: "var(--gradient-hero)" }}
+          >
             fake news
           </span>{" "}
           before you share.
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-          Paste any article, headline, or social post. We'll scan for manipulative language, conspiracy phrasing, and clickbait signals — then give you a trust score.
+          Paste any article, headline, or social post. We'll scan for manipulative language,
+          conspiracy phrasing, and clickbait signals — then give you a trust score.
         </p>
       </header>
 
       <section className="bg-card/60 backdrop-blur border border-border rounded-2xl p-6 md:p-8 mb-6">
-        <label htmlFor="url-input" className="block text-sm font-mono uppercase tracking-wider text-muted-foreground mb-3">
+        <label
+          htmlFor="url-input"
+          className="block text-sm font-mono uppercase tracking-wider text-muted-foreground mb-3"
+        >
           Article URL <span className="text-muted-foreground/60 normal-case">(optional)</span>
         </label>
         <form
-          onSubmit={(e) => { e.preventDefault(); handleFetchUrl(); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleFetchUrl();
+          }}
           className="flex flex-col sm:flex-row gap-2"
         >
           <input
@@ -122,7 +143,8 @@ function Index() {
           </div>
         )}
         <p className="mt-3 text-xs text-muted-foreground">
-          We'll fetch the page text server-side and run the same analysis. Some sites block scrapers — if that happens, just paste the text below.
+          We'll fetch the page text server-side and run the same analysis. Some sites block scrapers
+          — if that happens, just paste the text below.
         </p>
       </section>
 
@@ -138,18 +160,36 @@ function Index() {
         />
         <div className="flex flex-wrap gap-3 mt-4 items-center justify-between">
           <div className="flex gap-2">
-            <Button onClick={handleCheck} disabled={!text.trim()} size="lg" className="font-semibold">
+            <Button
+              onClick={handleCheck}
+              disabled={!text.trim()}
+              size="lg"
+              className="font-semibold"
+            >
               Analyze →
             </Button>
             <Button
               variant="outline"
               size="lg"
-              onClick={() => { setText(SAMPLE); setResult(null); }}
+              onClick={() => {
+                setText(SAMPLE);
+                setResult(null);
+              }}
             >
               Try sample
             </Button>
             {(text || result || url) && (
-              <Button variant="ghost" size="lg" onClick={() => { setText(""); setResult(null); setUrl(""); setFetchError(null); setFetchedTitle(null); }}>
+              <Button
+                variant="ghost"
+                size="lg"
+                onClick={() => {
+                  setText("");
+                  setResult(null);
+                  setUrl("");
+                  setFetchError(null);
+                  setFetchedTitle(null);
+                }}
+              >
                 Clear
               </Button>
             )}
@@ -196,10 +236,26 @@ function Index() {
 function ScoreCard({ result }: { result: AnalysisResult }) {
   const { trustScore, verdict, riskLevel } = result;
   const verdictMeta = {
-    "trustworthy": { label: "Looks Trustworthy", color: "var(--success)", grad: "var(--gradient-safe)" },
-    "questionable": { label: "Use Caution", color: "var(--warning)", grad: "linear-gradient(135deg, var(--warning), var(--accent))" },
-    "suspicious": { label: "Suspicious", color: "var(--destructive)", grad: "var(--gradient-danger)" },
-    "highly-suspicious": { label: "Highly Suspicious", color: "var(--destructive)", grad: "var(--gradient-danger)" },
+    trustworthy: {
+      label: "Looks Trustworthy",
+      color: "var(--success)",
+      grad: "var(--gradient-safe)",
+    },
+    questionable: {
+      label: "Use Caution",
+      color: "var(--warning)",
+      grad: "linear-gradient(135deg, var(--warning), var(--accent))",
+    },
+    suspicious: {
+      label: "Suspicious",
+      color: "var(--destructive)",
+      grad: "var(--gradient-danger)",
+    },
+    "highly-suspicious": {
+      label: "Highly Suspicious",
+      color: "var(--destructive)",
+      grad: "var(--gradient-danger)",
+    },
   }[verdict];
   const riskMeta = {
     low: { dot: "bg-success", text: "text-success", label: "🟢 Low Risk" },
@@ -217,9 +273,19 @@ function ScoreCard({ result }: { result: AnalysisResult }) {
         <div className="flex items-center justify-center">
           <div className="relative size-40">
             <svg viewBox="0 0 100 100" className="size-full -rotate-90">
-              <circle cx="50" cy="50" r="44" fill="none" stroke="var(--secondary)" strokeWidth="8" />
               <circle
-                cx="50" cy="50" r="44" fill="none"
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
+                stroke="var(--secondary)"
+                strokeWidth="8"
+              />
+              <circle
+                cx="50"
+                cy="50"
+                r="44"
+                fill="none"
                 stroke={verdictMeta.color}
                 strokeWidth="8"
                 strokeLinecap="round"
@@ -229,12 +295,16 @@ function ScoreCard({ result }: { result: AnalysisResult }) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <div className="text-5xl font-bold tabular-nums">{trustScore}</div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Trust score</div>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                Trust score
+              </div>
             </div>
           </div>
         </div>
         <div>
-          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border border-current/30 ${riskMeta.text} text-xs font-mono uppercase tracking-widest mb-3`}>
+          <div
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border border-current/30 ${riskMeta.text} text-xs font-mono uppercase tracking-widest mb-3`}
+          >
             <span className={`size-2 rounded-full ${riskMeta.dot}`} />
             {riskMeta.label}
           </div>
@@ -256,27 +326,34 @@ function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="border border-border rounded-lg p-3 bg-background/40">
       <div className="text-2xl font-bold tabular-nums">{value}</div>
-      <div className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
     </div>
   );
 }
 
 function CategoryBreakdown({ result }: { result: AnalysisResult }) {
-  const cats = (Object.keys(result.categoryCounts) as CategoryKey[])
-    .filter((c) => result.categoryCounts[c] > 0);
+  const cats = (Object.keys(result.categoryCounts) as CategoryKey[]).filter(
+    (c) => result.categoryCounts[c] > 0,
+  );
 
   if (!cats.length) {
     return (
       <div className="rounded-2xl border border-success/30 bg-success/5 p-6 text-center">
         <div className="text-success font-semibold mb-1">No suspicious keywords detected</div>
-        <div className="text-sm text-muted-foreground">The text avoids common misinformation signals.</div>
+        <div className="text-sm text-muted-foreground">
+          The text avoids common misinformation signals.
+        </div>
       </div>
     );
   }
 
   return (
     <div className="rounded-2xl border border-border bg-card/60 p-6">
-      <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">Detected signals</h2>
+      <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">
+        Detected signals
+      </h2>
       <div className="grid sm:grid-cols-2 gap-3">
         {cats.map((c) => {
           const kws = result.matches.filter((m) => m.category === c);
@@ -288,7 +365,10 @@ function CategoryBreakdown({ result }: { result: AnalysisResult }) {
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {kws.map((k) => (
-                  <span key={k.keyword} className="text-xs px-2 py-0.5 rounded-full bg-background/40 border border-current/20">
+                  <span
+                    key={k.keyword}
+                    className="text-xs px-2 py-0.5 rounded-full bg-background/40 border border-current/20"
+                  >
                     {k.keyword}
                   </span>
                 ))}
@@ -301,11 +381,19 @@ function CategoryBreakdown({ result }: { result: AnalysisResult }) {
   );
 }
 
-function HighlightedView({ parts, hasMatches }: { parts: Array<{ text: string; category?: CategoryKey }>; hasMatches: boolean }) {
+function HighlightedView({
+  parts,
+  hasMatches,
+}: {
+  parts: Array<{ text: string; category?: CategoryKey }>;
+  hasMatches: boolean;
+}) {
   if (!hasMatches) return null;
   return (
     <div className="rounded-2xl border border-border bg-card/60 p-6">
-      <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">Highlighted text</h2>
+      <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">
+        Highlighted text
+      </h2>
       <p className="leading-relaxed whitespace-pre-wrap">
         {parts.map((p, i) =>
           p.category ? (
@@ -314,7 +402,7 @@ function HighlightedView({ parts, hasMatches }: { parts: Array<{ text: string; c
             </mark>
           ) : (
             <span key={i}>{p.text}</span>
-          )
+          ),
         )}
       </p>
     </div>
@@ -371,7 +459,10 @@ function GuidancePanel({ level }: { level: RiskLevel }) {
         ))}
       </ul>
       <div className="text-xs text-muted-foreground border-t border-border pt-4 leading-relaxed">
-        <strong className="text-foreground">Honest limitation:</strong> This is a suspicion indicator, not a fact-checker. It detects writing patterns common in misleading content — it cannot confirm whether claims are true or false. Real verification still requires trusted sources.
+        <strong className="text-foreground">Honest limitation:</strong> This is a suspicion
+        indicator, not a fact-checker. It detects writing patterns common in misleading content — it
+        cannot confirm whether claims are true or false. Real verification still requires trusted
+        sources.
       </div>
     </div>
   );

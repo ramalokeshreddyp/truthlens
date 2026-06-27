@@ -30,10 +30,18 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "TruthLens — Misinformation & Fake News Detector" },
-      { name: "description", content: "Analyze news articles, social media posts, and headlines for sensationism, clickbait, and false urgency." },
+      {
+        name: "description",
+        content:
+          "Analyze news articles, social media posts, and headlines for sensationism, clickbait, and false urgency.",
+      },
       { name: "author", content: "TruthLens Team" },
       { property: "og:title", content: "TruthLens — Misinformation & Fake News Detector" },
-      { property: "og:description", content: "Analyze news articles, social media posts, and headlines for sensationism, clickbait, and false urgency." },
+      {
+        property: "og:description",
+        content:
+          "Analyze news articles, social media posts, and headlines for sensationism, clickbait, and false urgency.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

@@ -6,9 +6,9 @@ This document outlines the detailed system architecture, component integrations,
 
 ## 1. Project Objective & Core Concept
 
-Misinformation thrives on urgency, extreme emotional cues, clickbait hooks, and unverified source claims. The objective of **TruthLens** is to provide an instant, user-friendly **first-pass heuristic assessment** of news credibility. 
+Misinformation thrives on urgency, extreme emotional cues, clickbait hooks, and unverified source claims. The objective of **TruthLens** is to provide an instant, user-friendly **first-pass heuristic assessment** of news credibility.
 
-TruthLens does not verify facts (which requires web searches or deep AI reasoning), but instead analyzes the *writing style and linguistic tactics* commonly used by malicious actors to capture attention and manipulate readers.
+TruthLens does not verify facts (which requires web searches or deep AI reasoning), but instead analyzes the _writing style and linguistic tactics_ commonly used by malicious actors to capture attention and manipulate readers.
 
 ---
 
@@ -71,17 +71,20 @@ sequenceDiagram
 ## 4. Key Modules & Responsibilities
 
 ### 1. Main Page Controller (`src/routes/index.tsx`)
-*   Manages UI state (fetch states, error handling, result display).
-*   Handles URL submission forms and pasted text areas.
-*   Triggers the highlight parsing engine on successful evaluation.
+
+- Manages UI state (fetch states, error handling, result display).
+- Handles URL submission forms and pasted text areas.
+- Triggers the highlight parsing engine on successful evaluation.
 
 ### 2. Heuristic Analyzer Engine (`src/lib/analyzer.ts`)
-*   **`analyzeText(text)`**: Receives plain text, counts words, run regular expression scans for defined keywords, computes punctuation rates, applies deduction logic, and returns an `AnalysisResult` object.
-*   **`highlightText(text, matches)`**: Tokens the original text and wraps matched keywords in styled tags for dynamic inline highlighting.
+
+- **`analyzeText(text)`**: Receives plain text, counts words, run regular expression scans for defined keywords, computes punctuation rates, applies deduction logic, and returns an `AnalysisResult` object.
+- **`highlightText(text, matches)`**: Tokens the original text and wraps matched keywords in styled tags for dynamic inline highlighting.
 
 ### 3. Server Web Fetcher (`src/server/article.functions.ts`)
-*   Acts as an server-side proxy avoiding CORS blockages.
-*   Runs clean extraction using regular expressions (without heavy library dependencies like JSDOM or Cheerio, making it extremely lightweight and compatible with Cloudflare edge workerd runtime).
+
+- Acts as an server-side proxy avoiding CORS blockages.
+- Runs clean extraction using regular expressions (without heavy library dependencies like JSDOM or Cheerio, making it extremely lightweight and compatible with Cloudflare edge workerd runtime).
 
 ---
 
@@ -102,15 +105,16 @@ $$\text{Trust Score} = 100 - (\text{Category Deductions}) - (\text{Punctuation D
 
 ### Deduction Matrix
 
-| Signal Trigger | Rule | Maximum Deduction |
-| :--- | :--- | :--- |
-| **Suspicious Keywords** | $-5$ points per match | $-50$ points |
-| **Exclamation Marks** | $-2$ points per `!` | $-15$ points |
-| **Repeated Punctuation** | $-5$ points per occurrences (e.g. `!!!`, `??`) | $-10$ points |
-| **ALL CAPS words** | $-3$ points per word (length $\ge 4$) | $-15$ points |
-| **Conspiracy Language** | Extra $-4$ points per match | $-20$ points |
+| Signal Trigger           | Rule                                           | Maximum Deduction |
+| :----------------------- | :--------------------------------------------- | :---------------- |
+| **Suspicious Keywords**  | $-5$ points per match                          | $-50$ points      |
+| **Exclamation Marks**    | $-2$ points per `!`                            | $-15$ points      |
+| **Repeated Punctuation** | $-5$ points per occurrences (e.g. `!!!`, `??`) | $-10$ points      |
+| **ALL CAPS words**       | $-3$ points per word (length $\ge 4$)          | $-15$ points      |
+| **Conspiracy Language**  | Extra $-4$ points per match                    | $-20$ points      |
 
 The final score is clamped between $0$ and $100$.
-*   **🟢 Low Risk (Score 80–100)**: Likely normal reporting style.
-*   **🟡 Medium Risk (Score 55–79)**: Minor sensationalist/emotional language detected.
-*   **🔴 High Risk (Score 0–54)**: Heavy conspiracy tags, clickbait hooks, or exaggerated punctuation.
+
+- **🟢 Low Risk (Score 80–100)**: Likely normal reporting style.
+- **🟡 Medium Risk (Score 55–79)**: Minor sensationalist/emotional language detected.
+- **🔴 High Risk (Score 0–54)**: Heavy conspiracy tags, clickbait hooks, or exaggerated punctuation.
